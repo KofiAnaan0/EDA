@@ -38,7 +38,7 @@ Viewing the top 5 & the least 5 data from both client_data & price_data
 client_data.head(5)
 price_data.head(5)
 ```
-![client_data](assets/)
+![client_data](assets/client_head.JPG)
 
 ## a. Data Types and Structure
 
