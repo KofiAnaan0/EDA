@@ -49,7 +49,7 @@ client_df.info()
 price_df.info()
 ```
 
-![client_data](assets/)
+![client_data](assets/price_info.JPG)
 
 From this, I gained insights into the number of null values, data types, and memory usage.
 
@@ -61,7 +61,7 @@ A statistical summary was generated using the describe() function:
 client_df.describe()
 price_df.describe()
 ```
-![client_data](assets/)
+![client_data](assets/price_describe.JPG)
 
 Observations:
 - Client Data: The key takeaway was the presence of highly skewed data, as indicated by the percentile values.
@@ -132,7 +132,7 @@ churn_percentage = churn_total / churn_total.sum() * 100
 # Ploting a stacked bar graph
 plot_stacked_bars(churn_percentage.transpose(), "Churning status", (5, 5), legend_="lower right")
 ```
-![stacked_bar](assets/)
+![stacked_bar](assets/churn_status.JPG)
 
 About 10% of the total customers have churned.
 
@@ -150,7 +150,7 @@ channel_churn.head(10)
 stacked_bar_chart(channel_churn, "Churn by Sales Channel", rot_=30)
 ```
 
-![stacked_bar](assets/)
+![stacked_bar](assets/churn_sales.JPG)
 
 The churning customers are distributed over 5 different values for channel_sales. As well as this, the value of MISSING has a churn rate of 7.6%. MISSING indicates a missing value. This feature could be an important feature when it comes to building our model.
 
@@ -189,7 +189,8 @@ plot_distribution(consumption, "electricity consumption of the last month", ax[2
 plot_distribution(consumption, "current paid consumption", ax[3])
 ```
 
-![stacked_bar](assets/)
+![stacked_bar](assets/electric.JPG)
+![stacked_bar](assets/gas.JPG)
 
 Clearly, the consumption data is highly positively skewed, presenting a very long right-tail towards the higher values of the distribution. The values on the higher and lower end of the distribution are likely to be outliers. So I used a boxplot to visualise the outliers in more detail. A boxplot is a standardized way of displaying the distribution based on a five number summary:
 
@@ -220,7 +221,8 @@ for ax in axs:
     plt.show()
 ```
 
-![stacked_bar](assets/)
+![stacked_bar](assets/belectric.JPG)
+![stacked_bar](assets/bgas.JPG)
 
 
 
