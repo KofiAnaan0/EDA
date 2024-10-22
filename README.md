@@ -134,6 +134,98 @@ plot_stacked_bars(churn_percentage.transpose(), "Churning status", (5, 5), legen
 ```
 ![stacked_bar](assets/)
 
+About 10% of the total customers have churned.
+
+## Sales channel
+
+```python
+#creating channel dataframe
+channel = client_data[["id", "churn", "code of the sales channel"]]
+channel = channel.groupby(["code of the sales channel", "churn"])['id'].count()
+channel = channel.unstack(level=1).fillna(0)
+channel_churn = (channel.div(channel.sum(axis=1), axis=0)*100).sort_values(by=[1], ascending=False)
+channel_churn.head(10)
+
+#Ploting the graph
+stacked_bar_chart(channel_churn, "Churn by Sales Channel", rot_=30)
+```
+
+![stacked_bar](assets/)
+
+The churning customers are distributed over 5 different values for channel_sales. As well as this, the value of MISSING has a churn rate of 7.6%. MISSING indicates a missing value. This feature could be an important feature when it comes to building our model.
+
+## Consumption
+
+The distribution of consumption in the last year and month. Since the consumption data is univariate, I used histograms to visualize their distribution.
+
+```python
+# creating consumption dataframe
+consumption = client_data[["id", "churn", "electricity consumption of the past 12 months", "gas consumption of the past 12 months", "electricity consumption of the last month", "has_gas", "current paid consumption"]]
+```
+
+```python
+#function for plotting the histogram
+def plot_distribution(dataframe, column, ax, bins_=50, width=0.85):
+    """
+    Plot variable distribution in a stacked histogram of churned or retained company
+    """
+    # Create a temporal dataframe with the data to be plot
+    temp = pd.DataFrame({"Retention": dataframe[dataframe["churn"]==0][column],
+    "Churn":dataframe[dataframe["churn"]==1][column]})
+    # Plot the histogram
+    temp[["Retention","Churn"]].plot(kind='hist', bins=bins_, ax=ax, stacked=True)
+    # X-axis label
+    ax.set_xlabel(column)
+    # Change the x-axis to plain style
+    ax.ticklabel_format(style='plain', axis='x')
+```
+
+```python
+fig, ax = plt.subplots(nrows=4, figsize=(16, 20))
+
+plot_distribution(consumption, "electricity consumption of the past 12 months", ax[0])
+plot_distribution(consumption[consumption['has_gas'] =='t'], "gas consumption of the past 12 months", ax[1])
+plot_distribution(consumption, "electricity consumption of the last month", ax[2])
+plot_distribution(consumption, "current paid consumption", ax[3])
+```
+
+![stacked_bar](assets/)
+
+Clearly, the consumption data is highly positively skewed, presenting a very long right-tail towards the higher values of the distribution. The values on the higher and lower end of the distribution are likely to be outliers. So I used a boxplot to visualise the outliers in more detail. A boxplot is a standardized way of displaying the distribution based on a five number summary:
+
+- Minimum
+- First quartile (Q1)
+- Median
+- Third quartile (Q3)
+- Maximum
+  
+It can reveal outliers and what their values are. It can also determine if our data is symmetrical, how tightly the data is grouped and if/how our data is skewed.
+
+```python
+fig, axs = plt.subplots(nrows=4, figsize=(18,25))
+
+# Plot histogram
+sns.boxplot(consumption["cons_12m"], ax=axs[0])
+sns.boxplot(consumption[consumption["has_gas"] == "t"]["cons_gas_12m"], ax=axs[1])
+sns.boxplot(consumption["cons_last_month"], ax=axs[2])
+sns.boxplot(consumption["imp_cons"], ax=axs[3])
+
+# Remove scientific notation
+for ax in axs:
+    ax.ticklabel_format(style='plain', axis='x')
+    # Set x-axis limit
+    axs[0].set_xlim(-200000, 2000000)
+    axs[1].set_xlim(-200000, 2000000)
+    axs[2].set_xlim(-20000, 100000)
+    plt.show()
+```
+
+![stacked_bar](assets/)
+
+
+
+
+
 
 
 
